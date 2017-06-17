@@ -19,6 +19,7 @@ _files=[
         '.dircolors',
         # Git
         '.gitconfig',
+        '.git-prompt.sh',
         # Tmux
         '.tmux.conf',
         # Vim
