@@ -72,7 +72,7 @@ def patchBashrc(dry_run):
     if not dry_run:
         with open(bashrc, 'a') as f:
             f.write('\n#Source home git customizations\n')
-            f.write('. .bashrc.custom\n')
+            f.write('. ~/{}\n'.format(_bashrc_custom))
 
 
 def setupVim(dry_run):
