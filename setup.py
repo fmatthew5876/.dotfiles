@@ -4,6 +4,7 @@ import subprocess
 import os
 import sys
 import logging
+import shutil
 
 # Don't clobber system installed .bashrc, instead source this one at the end.
 _bashrc_custom='.bashrc.custom'
@@ -40,6 +41,18 @@ def makeLink(target, link, dry_run):
     if not dry_run:
         os.symlink(target, link)
 
+def rmTree(path, dry_run):
+    if not os.path.exists(path):
+        return
+    logging.info("%s: Removing directory tree...", path)
+    if not dry_run:
+        shutil.rmtree(path)
+
+def mkdir(path, dry_run):
+    logging.info("%s: Creating directory...", path)
+    if not dry_run:
+        os.mkdir(path)
+
 def createLinks(dry_run):
     logging.info("Creating symlinks in home directory...")
     for f in _files:
@@ -56,7 +69,7 @@ def createLinks(dry_run):
             raise Exception("{}: link exists but points to {}! Please fix!".format(link, os.path.realpath(link)))
         if os.path.exists(link):
             raise Exception("{}: file already exists! Please fix!".format(link))
-                
+
         makeLink(target, link, dry_run)
 
 def patchBashrc(dry_run):
@@ -75,7 +88,7 @@ def patchBashrc(dry_run):
             f.write('. ~/{}\n'.format(_bashrc_custom))
 
 
-def setupVim(dry_run):
+def setupVim(rebuild_ycmd, libclang_path, dry_run):
     logging.info("Doing initial vim setup...")
     vimrc = os.path.join(_homedir, ".vimrc")
     bundledir = os.path.join(_homedir, ".vim", "bundle")
@@ -95,11 +108,30 @@ def setupVim(dry_run):
     # Tell vim to install packages
     runCmd("vim +PluginInstall +qall", dry_run)
 
-    logging.info("All Done Setting up vim!")
-    logging.info("----------------------------")
-    logging.info("")
-    logging.info("Please see instructions to setup YCM plugin")
-    logging.info("https://valloric.github.io/YouCompleteMe/#full-installation-guide")
+    ycmd_path = os.path.join(_homedir,
+            bundledir, 'YouCompleteMe/third_party/ycmd/cpp')
+
+    # Possible clang libraries (linux, cygwin, etc..)
+    target_libclang = [ os.path.join(ycmd_path, x) for x in ('libclang.so', 'libclang.dll', 'libclang.dll.a')]
+
+    if not rebuild_ycmd and not sum(os.path.isfile(x) for x in target_libclangs):
+        logging.info("Skipping ycmd build...")
+    else:
+        logging.info("Building ycmd...")
+
+        builddir="./ycm_build"
+        rmTree(builddir, dry_run)
+        mkdir(builddir, dry_run)
+        cmd="cd {}; cmake -G 'Unix Makefiles' . {}".format(builddir, ycmd_path)
+        if libclang_path is None:
+            cmd+=" -DUSE_SYSTEM_LIBCLANG=ON"
+        else:
+            cmd+=" -DEXTERNAL_LIBCLANG_PATH=\"{}\"".format(libclang_path)
+        runCmd(cmd, dry_run)
+        cmd = "cd {}; cmake --build . --target ycm_core --config Release".format(builddir)
+        runCmd(cmd, dry_run)
+
+
 
 
 def main():
@@ -108,6 +140,8 @@ def main():
     parser.add_argument("--no-links", action='store_true', help="Don't create symlinks")
     parser.add_argument("--no-bashrc", action='store_true', help="Don't patch .bashrc")
     parser.add_argument("--no-vim", action='store_true', help="Don't do vim setup")
+    parser.add_argument("--rebuild-ycmd", action='store_true', help='Always rebuild vim ycmd')
+    parser.add_argument("--libclang-path", action='store', default=None, help='Path to custom built libclang.so')
 
     args = parser.parse_args()
 
@@ -117,6 +151,11 @@ def main():
     do_links = not args.no_links
     do_bashrc = not args.no_bashrc
     do_vim = not args.no_vim
+    rebuild_ycmd = args.rebuild_ycmd
+    libclang_path = args.libclang_path
+
+    logging.info("Changing directory to script dir...")
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
     if do_links:
         createLinks(dry_run)
@@ -125,7 +164,7 @@ def main():
         patchBashrc(dry_run)
 
     if do_vim:
-        setupVim(dry_run)
+        setupVim(rebuild_ycmd, libclang_path, dry_run)
 
 
 if __name__ == "__main__":
