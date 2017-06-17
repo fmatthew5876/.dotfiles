@@ -24,13 +24,14 @@ YELLOW="$(tput setaf 3)"
 PURPLE="$(tput setaf 5)"
 BLUE="$(tput setaf 6)"
 ORANGE="$(tput setaf 9)"
-YELLOW2="$(tput setaf 11)"
 RESET="$(tput sgr0)"
 
+#Now create the prompt
+
 #Show result of last command
-export PS1='`if [ $? = 0 ]; then echo "\[${GREEN}\]+"; else echo "\[${ORANGE}\]-"; fi`'
+export PS1='`if [ $? = 0 ]; then echo "\[${GREEN}\]+"; else echo "\[${ORANGE}\]-\[${GREEN}\]"; fi`'
 #Username@host:(git branch)cwd
-export PS1+='\[${GREEN}\]\u@\h:\[${ORANGE}\]$(__git_ps1 "[%s]")\[${YELLOW}\]\w'
+export PS1+='\u@\h:\[${ORANGE}\]$(__git_ps1 "[%s]")\[${YELLOW}\]\w'
 #Show number of jobs if at least one job
 export PS1+='`if [ -n "$(jobs -p)" ]; then echo "\[${BLUE}\](\j)"; fi`'
 #Finish
