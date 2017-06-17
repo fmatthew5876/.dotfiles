@@ -4,6 +4,18 @@ Home Directory Configs Repo
 Quick Start
 ===========
 
+Install the following software packages:
+
+* bash
+* bash-completion
+* git
+* gcc (g++)
+* clang (libclang-devel)
+* make
+* cmake
+* python3 (libpython3-devel)
+* vim (with python support)
+
 Clone the repo to `~/home`
 
 ```
@@ -21,15 +33,15 @@ cd ~/home/
 ./setup.py
 ```
 
-Notes
-=================
+New System Build Notes
+======================
 
 
 Mounting NTFS drives
-----------------------
+--------------------
 
 Mount an NTFS partition with no exec and owned by uid/gid 1000.
 
 ```
-DEVICE DIR ntfs	rw,uid=1000,gid=1000,noatime,fmask=0137,dmask=0027
+DEVICE PATH ntfs	rw,uid=1000,gid=1000,noatime,fmask=0137,dmask=0027
 ```
