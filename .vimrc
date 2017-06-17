@@ -126,4 +126,6 @@ let g:syntastic_python_checkers=['python']
 let g:airline_powerline_fonts=1
 "Always show the statusbar
 set laststatus=2
+"Don't show mode below statusline since airline already provides it
+set noshowmode
 

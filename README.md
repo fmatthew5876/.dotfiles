@@ -33,6 +33,15 @@ cd ~/home/
 ./setup.py
 ```
 
+Using Solarized Theme for Windows cmd.exe
+-----------------------------------------
+
+Use the provided registry file.
+
+```
+regedit /s solarized-dark.reg
+```
+
 New System Build Notes
 ======================
 

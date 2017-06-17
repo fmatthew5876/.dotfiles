@@ -27,6 +27,8 @@ _files=[
         '.vimrc',
         # Xterm, urxvt, etc..
         '.Xresources',
+        # Cywgin mintty
+        '.minttyrc',
         ]
 
 _homedir = os.path.expanduser('~')
