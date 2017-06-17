@@ -9,13 +9,16 @@ import logging
 # Intention is to specify site specific environment variables here.
 _sitefile='.site.customrc'
 
+# Don't clobber system installed .bashrc, instead source this one at the end.
+_bashrc_custom='.bashrc.custom'
+
 # List of files to symlink into home.
 # Must be relative paths to this git repo root.
 _files=[
         # Bash Environment file
-        # Don't clobber system installed .bashrc, instead source this one
-        # at the end.
         '.bashrc.custom',
+        # Solarized Dark 256 colors for gnu coreutils
+        '.dircolors',
         # Site Custom Environment File
         _sitefile,
         # Git
@@ -62,6 +65,22 @@ def createLinks(dry_run):
                 
         makeLink(target, link, dry_run)
 
+def patchBashrc(dry_run):
+    bashrc = os.path.join(_homedir, '.bashrc')
+    logging.info("Patching %s ...", bashrc)
+    if os.path.exists(os.path.join(_homedir, '.bashrc')):
+        with open(bashrc) as f:
+            for line in f:
+                if _bashrc_custom in line:
+                    logging.info("%s: Already patched! Skipping...", bashrc)
+                    return
+
+    if not dry_run:
+        with open(bashrc, 'a') as f:
+            f.write('\n#Source home git customizations\n')
+            f.write('. .bashrc.custom\n')
+
+
 def setupVim(dry_run):
     logging.info("Doing initial vim setup...")
     vimrc = os.path.join(_homedir, ".vimrc")
@@ -93,6 +112,7 @@ def main():
     parser = argparse.ArgumentParser("Home directory setup script")
     parser.add_argument('-n', '--dry-run', action='store_true', help="Run through script but don't actually run commands")
     parser.add_argument("--no-links", action='store_true', help="Don't create symlinks")
+    parser.add_argument("--no-bashrc", action='store_true', help="Don't patch .bashrc")
     parser.add_argument("--no-vim", action='store_true', help="Don't do vim setup")
 
     args = parser.parse_args()
@@ -104,10 +124,14 @@ def main():
 
     dry_run = args.dry_run
     do_links = not args.no_links
+    do_bashrc = not args.no_bashrc
     do_vim = not args.no_vim
 
     if do_links:
         createLinks(dry_run)
+
+    if do_bashrc:
+        patchBashrc(dry_run)
 
     if do_vim:
         setupVim(dry_run)

@@ -18,6 +18,7 @@ Xft.hintstyle:  hintfull
 ! -- Fonts -- !
 URxvt.font:xft:Monospace:pixelsize=18
 URxvt.boldfont:xft:Monospace-Bold:pixelsize=18
+#URxvt.letterSpace:1
 
 !!Source http://github.com/altercation/solarized
 
