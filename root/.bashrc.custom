@@ -1,0 +1,26 @@
+#Ensure 256 color support in terminal apps
+export TERM=xterm-256color
+
+#Don't break linewrapping when resizing console window
+shopt -s checkwinsize
+
+#-------------------------------------
+#Bash Prompt
+#-------------------------------------
+
+#Prevent \w from taking too much screen space
+export PROMPT_DIRTRIM=3
+
+#Colors
+RED="$(tput setaf 1)"
+PURPLE="$(tput setaf 5)"
+RESET="$(tput sgr0)"
+
+#Show result of last command
+export PS1='\[${RED}\]`if [ $? = 0 ]; then echo "+"; else echo "-"; fi`'
+#Username@host:cwd
+export PS1+='\u@\h:\w'
+#Show number of jobs if at least one job
+export PS1+='`if [ -n "$(jobs -p)" ]; then echo "\[${PURPLE}\](\j)"; fi`'
+#Finish
+export PS1+='\[${RESET}\]\$ '
