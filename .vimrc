@@ -23,7 +23,8 @@ call vundle#end()
 " Theme setup
 "-------------------------------
 set background=dark
-colorscheme solarized
+" We assume terminal is setup correctly for solarized
+colorscheme default
 let g:solarized_termcolors=256
 if has("gui_running")
 	set background=light

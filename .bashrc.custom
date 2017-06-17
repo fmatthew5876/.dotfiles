@@ -30,7 +30,7 @@ RESET="$(tput sgr0)"
 #Show result of last command
 export PS1='`if [ $? = 0 ]; then echo "\[${GREEN}\]+"; else echo "\[${ORANGE}\]-"; fi`'
 #Username@host:(git branch)cwd
-export PS1+='\[${GREEN}\]\u@\h:\[${YELLOW2}\]$(__git_ps1 "[%s]")\[${YELLOW}\]\w'
+export PS1+='\[${GREEN}\]\u@\h:\[${ORANGE}\]$(__git_ps1 "[%s]")\[${YELLOW}\]\w'
 #Show number of jobs if at least one job
 export PS1+='`if [ -n "$(jobs -p)" ]; then echo "\[${BLUE}\](\j)"; fi`'
 #Finish

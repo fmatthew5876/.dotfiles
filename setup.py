@@ -26,7 +26,7 @@ _files=[
         '.vim',
         '.vimrc',
         # Xterm, urxvt, etc..
-        '.Xdefaults',
+        '.Xresources',
         ]
 
 _homedir = os.path.expanduser('~')
@@ -54,6 +54,13 @@ def mkdir(path, dry_run):
     logging.info("%s: Creating directory...", path)
     if not dry_run:
         os.mkdir(path)
+
+def genXresources(dry_run):
+    logging.info("Generating .Xresources...")
+    if not dry_run:
+        with open('.Xresources', 'w') as f:
+            f.write('!Auto-generated! Do not edit directly!\n\n')
+    runCmd("cpp -undef Xresources.pre >> .Xresources", dry_run)
 
 def createLinks(dry_run):
     logging.info("Creating symlinks in home directory...")
@@ -158,6 +165,8 @@ def main():
 
     logging.info("Changing directory to script dir...")
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+    genXresources(dry_run)
 
     if do_links:
         createLinks(dry_run)
