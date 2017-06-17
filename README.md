@@ -33,6 +33,17 @@ cd ~/home/
 ./setup.py
 ```
 
+Installing configs for root
+---------------------------
+
+This must be done manually.
+
+```
+sudo cp ~/home/root/.bashrc.custom /root
+echo "source /root/.bashrc.custom" >> /root/bashrc
+```
+
+
 Using Solarized Theme for Windows cmd.exe
 -----------------------------------------
 
