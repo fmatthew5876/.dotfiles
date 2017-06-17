@@ -5,10 +5,6 @@ import os
 import sys
 import logging
 
-# Custom Environment file, must be created manually.
-# Intention is to specify site specific environment variables here.
-_sitefile='.site.customrc'
-
 # Don't clobber system installed .bashrc, instead source this one at the end.
 _bashrc_custom='.bashrc.custom'
 
@@ -19,8 +15,6 @@ _files=[
         '.bashrc.custom',
         # Solarized Dark 256 colors for gnu coreutils
         '.dircolors',
-        # Site Custom Environment File
-        _sitefile,
         # Git
         '.gitconfig',
         # Tmux
@@ -118,9 +112,6 @@ def main():
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
-
-    if not os.path.exists(_sitefile):
-        raise Exception("{}: Not found! You must create this file manually!".format(_sitefile))
 
     dry_run = args.dry_run
     do_links = not args.no_links
