@@ -5,6 +5,7 @@ import os
 import sys
 import logging
 import shutil
+import glob
 
 # Don't clobber system installed .bashrc, instead source this one at the end.
 _bashrc_custom='.bashrc.custom'
@@ -112,10 +113,10 @@ def setupVim(rebuild_ycmd, libclang_path, dry_run):
             bundledir, 'YouCompleteMe/third_party/ycmd/cpp')
 
     # Possible clang libraries (linux, cygwin, etc..)
-    target_libclang = [ os.path.join(ycmd_path, x) for x in ('libclang.so', 'libclang.dll', 'libclang.dll.a')]
+    target_libclangs = glob.glob(os.path.join(ycmd_path, '../libclang.*'))
 
-    if not rebuild_ycmd and not sum(os.path.isfile(x) for x in target_libclangs):
-        logging.info("Skipping ycmd build...")
+    if not rebuild_ycmd and len(target_libclangs) > 0:
+        logging.info("Found %s : Skipping ycmd build...", target_libclangs)
     else:
         logging.info("Building ycmd...")
 
