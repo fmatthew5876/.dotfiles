@@ -1,5 +1,25 @@
-# home
-Home dir configs
+Home Directory Configs Repo
+===========================
+
+Quick Start
+===========
+
+Clone the repo to `~/home`
+
+```
+cd ~
+git clone git@github.com:fmatthew5876/home.git
+```
+
+Add any site specific customizations to `~/.bashrc`:
+
+
+Run the setup script:
+
+```
+cd ~/home/
+./setup.py
+```
 
 Notes
 =================
