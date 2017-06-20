@@ -32,6 +32,7 @@ _files=[
         ]
 
 _homedir = os.path.expanduser('~')
+_repodir = os.path.dirname(__file__)
 
 _vundle_url="https://github.com/VundleVim/Vundle.vim.git"
 
@@ -68,7 +69,9 @@ def createLinks(allow_custom, dry_run):
     logging.info("Creating symlinks in home directory...")
     for f in _files:
         link = os.path.join(_homedir, f)
-        target = os.path.abspath(f)
+        #Construct link path relatively from ~. This allows easy compatibility with environments that have /home setup
+        #symlinks to complex underlying path structures which differ across hosts.
+        target = os.path.join(_homedir, os.path.relpath(os.path.join(_repodir, f), _homedir))
 
         if not os.path.exists(target):
             raise FileNotFoundError(target)
