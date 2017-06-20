@@ -14,7 +14,6 @@ Plugin 'vim-syntastic/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
 " End Vundle Plugins List
