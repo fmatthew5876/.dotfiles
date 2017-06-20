@@ -64,7 +64,7 @@ def genXresources(dry_run):
             f.write('!Auto-generated! Do not edit directly!\n\n')
     runCmd("cpp -undef Xresources.pre >> .Xresources", dry_run)
 
-def createLinks(dry_run):
+def createLinks(allow_custom, dry_run):
     logging.info("Creating symlinks in home directory...")
     for f in _files:
         link = os.path.join(_homedir, f)
@@ -75,10 +75,16 @@ def createLinks(dry_run):
 
         if os.path.islink(link):
             if os.path.realpath(target) == os.path.realpath(link):
-                logging.info("%s already linked! Skipping...", link)
+                logging.info("%s: already linked! Skipping...", link)
+                continue
+            if allow_custom:
+                logging.warn("%s: is already a link! Skipping due to --allow-custom...", link)
                 continue
             raise Exception("{}: link exists but points to {}! Please fix!".format(link, os.path.realpath(link)))
         if os.path.exists(link):
+            if allow_custom:
+                logging.warn("%s: already a file! Skipping due to --allow-custom...", link)
+                continue
             raise Exception("{}: file already exists! Please fix!".format(link))
 
         makeLink(target, link, dry_run)
@@ -153,6 +159,7 @@ def main():
     parser.add_argument("--no-vim", action='store_true', help="Don't do vim setup")
     parser.add_argument("--rebuild-ycmd", action='store_true', help='Always rebuild vim ycmd')
     parser.add_argument("--libclang-path", action='store', default=None, help='Path to custom built libclang.so')
+    parser.add_argument("--allow-custom", action='store_true', default=None, help="Don't die if custom configs already exist")
 
     args = parser.parse_args()
 
@@ -162,6 +169,7 @@ def main():
     do_links = not args.no_links
     do_bashrc = not args.no_bashrc
     do_vim = not args.no_vim
+    allow_custom = args.allow_custom
     rebuild_ycmd = args.rebuild_ycmd
     libclang_path = args.libclang_path
 
@@ -171,7 +179,7 @@ def main():
     genXresources(dry_run)
 
     if do_links:
-        createLinks(dry_run)
+        createLinks(allow_custom, dry_run)
 
     if do_bashrc:
         patchBashrc(dry_run)
