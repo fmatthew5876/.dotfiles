@@ -11,7 +11,9 @@ export TERM=xterm-256color
 shopt -s checkwinsize
 
 #Solarized theme for gnu utils
+if [ "`uname`" != "FreeBSD" ]; then
 eval `dircolors ~/.dircolors`
+fi
 
 #Add magic git hooks for prompt
 . ~/.git-prompt.sh
