@@ -3,6 +3,16 @@ set bs=2
 
 filetype off
 
+"python with virtualenv support
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
+
 " set runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 
@@ -15,6 +25,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'nvie/vim-flake8'
 call vundle#end()
 " End Vundle Plugins List
 
@@ -92,6 +103,11 @@ set foldmethod=indent "Default fold by indentation
 "-------------------------------
 let g:netrw_liststyle=3 "Preferred listing style
 let g:netrw_banner=0 "Don't show useless banner
+
+"-------------------------------
+"Python Config
+"-------------------------------
+let python_highlight_all=1
 
 "-------------------------------
 "YCM Configs
