@@ -32,21 +32,28 @@ _files=[
         ]
 
 _homedir = os.path.expanduser('~')
-_homedir = '/usr/home/matt/'
-_repodir = os.path.dirname(__file__)
-_repodir = '/usr/home/matt/home/'
+_repodir = _homedir + "/.dotfiles"
+
+print(os.path.dirname(__file__))
+print(os.path.split(os.path.dirname(__file__))[-1])
+print(_repodir)
 
 _vundle_url="https://github.com/VundleVim/Vundle.vim.git"
 
 def runCmd(cmd, dry_run):
-    logging.info("Running cmd: %s", cmd)
+    logging.info("Running cmd: %s ...", cmd)
     if not dry_run:
         subprocess.check_call(cmd, shell=True)
 
 def makeLink(target, link, dry_run):
-    logging.info("Symlinking %s -> %s", link, target)
+    logging.info("Symlinking %s -> %s ...", link, target)
     if not dry_run:
         os.symlink(target, link)
+
+def remove(target, dry_run):
+    logging.info("Removing %s ...", target)
+    if not dry_run:
+        os.remove(target)
 
 def rmTree(path, dry_run):
     if not os.path.exists(path):
@@ -67,7 +74,7 @@ def genXresources(dry_run):
             f.write('!Auto-generated! Do not edit directly!\n\n')
     runCmd("cpp -undef Xresources.pre >> .Xresources", dry_run)
 
-def createLinks(allow_custom, dry_run):
+def createLinks(allow_custom, dry_run, rebuild_links):
     logging.info("Creating symlinks in home directory...")
     for f in _files:
         link = os.path.join(_homedir, f)
@@ -78,19 +85,24 @@ def createLinks(allow_custom, dry_run):
         if not os.path.exists(target):
             raise FileNotFoundError(target)
 
-        if os.path.islink(link):
-            if os.path.realpath(target) == os.path.realpath(link):
-                logging.info("%s: already linked! Skipping...", link)
-                continue
-            if allow_custom:
-                logging.warn("%s: is already a link! Skipping due to --allow-custom...", link)
-                continue
-            raise Exception("{}: link exists but points to {}! Please fix!".format(link, os.path.realpath(link)))
         if os.path.exists(link):
-            if allow_custom:
-                logging.warn("%s: already a file! Skipping due to --allow-custom...", link)
-                continue
-            raise Exception("{}: file already exists! Please fix!".format(link))
+            if os.path.islink(link):
+                if os.path.realpath(target) == os.path.realpath(link):
+                    logging.info("%s: already linked! Skipping...", link)
+                    continue
+                if not rebuild_links:
+                    if allow_custom:
+                        logging.warn("%s: is already a link! Skipping due to --allow-custom...", link)
+                        continue
+                    raise Exception("{}: link exists but points to {}! Please fix!".format(link, os.path.realpath(link)))
+            else:
+                if allow_custom:
+                    logging.warn("%s: already a file! Skipping due to --allow-custom...", link)
+                    continue
+                raise Exception("{}: file already exists! Please fix!".format(link))
+
+            if rebuild_links:
+                remove(link, dry_run)
 
         makeLink(target, link, dry_run)
 
@@ -163,6 +175,7 @@ def main():
     parser.add_argument("--no-bashrc", action='store_true', help="Don't patch .bashrc")
     parser.add_argument("--no-vim", action='store_true', help="Don't do vim setup")
     parser.add_argument("--rebuild-ycmd", action='store_true', help='Always rebuild vim ycmd')
+    parser.add_argument("--rebuild-links", action='store_true', help='Overwrite links')
     parser.add_argument("--libclang-path", action='store', default=None, help='Path to custom built libclang.so')
     parser.add_argument("--allow-custom", action='store_true', default=None, help="Don't die if custom configs already exist")
 
@@ -177,6 +190,7 @@ def main():
     allow_custom = args.allow_custom
     rebuild_ycmd = args.rebuild_ycmd
     libclang_path = args.libclang_path
+    rebuild_links = args.rebuild_links
 
     logging.info("Changing directory to script dir...")
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -184,7 +198,7 @@ def main():
     genXresources(dry_run)
 
     if do_links:
-        createLinks(allow_custom, dry_run)
+        createLinks(allow_custom, dry_run, rebuild_links)
 
     if do_bashrc:
         patchBashrc(dry_run)
