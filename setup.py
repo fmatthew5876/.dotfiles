@@ -133,6 +133,18 @@ def setupVim(rebuild_ycmd, libclang_path, dry_run):
     if not os.path.isdir(bundledir):
         raise FileNotFoundError(bundledir)
 
+    python_ver=2
+    vim_ver = subprocess.check_output("vim --version", shell=True).decode('utf-8')
+    if "+python3" in vim_ver:
+        python_ver=3
+        logging.info("Detected python3 support in vim!")
+    elif "+python" in vim_ver:
+        python_ver=2
+        logging.info("Detected python2 support in vim!")
+    else:
+        raise Exception("No python support detected in vim binary!")
+
+
     # Clone vundle repo
     vundledir = os.path.join(bundledir, "Vundle.vim")
     if not os.path.exists(vundledir):
@@ -156,7 +168,11 @@ def setupVim(rebuild_ycmd, libclang_path, dry_run):
         builddir="./ycm_build"
         rmTree(builddir, dry_run)
         mkdir(builddir, dry_run)
-        cmd="cd {}; cmake -G 'Unix Makefiles' . {}".format(builddir, ycmd_path)
+        if python_ver == 2:
+            pystr = "-DUSE_PYTHON2=ON"
+        else:
+            pystr = "-DUSE_PYTHON2=OFF"
+        cmd="cd {}; cmake -G 'Unix Makefiles' {} . {}".format(builddir, pystr, ycmd_path)
         if libclang_path is None:
             cmd+=" -DUSE_SYSTEM_LIBCLANG=ON"
         else:
