@@ -17,6 +17,8 @@ _files=[
         '.bashrc.custom',
         # Solarized Dark 256 colors for gnu coreutils
         '.dircolors',
+        # Gdb
+        '.gdbinit',
         # Git
         '.gitconfig',
         '.git-prompt.sh',
