@@ -29,26 +29,6 @@ let g:solarized_termcolors=256
 if has("gui_running")
 	set background=light
 	colorscheme solarized
-if has("gui_running")
-endif
-
-"-------------------------------
-"Syntax Highlighting options
-"-------------------------------
-syntax on
-"Highlight whitespace errors
-highlight link WhiteSpaceError ErrorMsg
-"Flag trailing whitespace as an error
-au Syntax * syn match WhiteSpaceError /\(\zs\%#\|\s\)\+$/ display
-"Flag mixed leading space/tabs as an error
-au Syntax * syn match WhiteSpaceError /^ \+\ze\t/ display
-
-filetype plugin indent on
-
-set incsearch
-set hlsearch
-set cursorline
-set showcmd
 endif
 
 "-------------------------------
@@ -83,10 +63,11 @@ set wildmenu
 "-------------------------------
 "Folding config
 "-------------------------------
-set foldenable "Enable folding
-set foldlevelstart=9999 "Never fold by default
-set foldnestmax=10 "Maximum 10 nested folds
-set foldmethod=indent "Default fold by indentation
+set nofoldenable
+"set foldenable "Enable folding
+"set foldlevelstart=9999 "Never fold by default
+"set foldnestmax=10 "Maximum 10 nested folds
+"set foldmethod=indent "Default fold by indentation
 
 "-------------------------------
 "Netrw Configs
