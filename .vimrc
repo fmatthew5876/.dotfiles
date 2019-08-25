@@ -10,6 +10,7 @@ Plug 'vim-syntastic/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'neoclide/coc.nvim', {'branch' : 'release'}
 "Plug 'Valloric/YouCompleteMe'
 "Plug 'rdnetto/YCM-Generator'
 Plug 'nvie/vim-flake8'
