@@ -6,14 +6,10 @@ filetype off
 " Begin vim-plugin Plugins List
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-fugitive'
-Plug 'vim-syntastic/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch' : 'release'}
-"Plug 'Valloric/YouCompleteMe'
-"Plug 'rdnetto/YCM-Generator'
-Plug 'nvie/vim-flake8'
 call plug#end()
 " End vim-plug Plugins List
 
@@ -77,31 +73,6 @@ let g:netrw_banner=0 "Don't show useless banner
 "Python Config
 "-------------------------------
 let python_highlight_all=1
-
-"-------------------------------
-"YCM Configs
-"-------------------------------
-"Don't ask about extra conf file
-let g:ycm_confirm_extra_conf=0
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_autoclose_preview_window_after_insertion=1
-"Enable location list so we can rapidly jump through errors
-let g:ycm_always_populate_location_list=1
-"Always use python3
-"let g:ycm_python_binary_path='python3'
-
-nnoremap <C-x> :YcmCompleter GoTo<CR>
-nnoremap <F6> :YcmCompleter GetType<CR>
-"Location List next/prev
-nnoremap <C-n> :lnext<CR>
-nnoremap <C-N> :lprevious<CR>
-
-"-------------------------------
-"Syntastic Configs
-"-------------------------------
-let g:syntastic_python_checkers=['python']
-"Always use python3
-"let g:syntastic_python_python_exec='python3'
 
 "-------------------------------
 "Vim airline configuration
