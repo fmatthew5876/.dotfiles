@@ -124,7 +124,7 @@ def patchBashrc(dry_run):
             f.write('. ~/{}\n'.format(_bashrc_custom))
 
 
-def setupVim(rebuild_ycmd, libclang_path, dry_run):
+def setupVim(dry_run):
     logging.info("Doing initial vim setup...")
     vimrc = os.path.join(_homedir, ".vimrc")
     bundledir = os.path.join(_homedir, ".vim", "bundle")
@@ -156,45 +156,13 @@ def setupVim(rebuild_ycmd, libclang_path, dry_run):
     # Tell vim to install packages
     runCmd("vim +PluginInstall +qall", dry_run)
 
-    ycmd_path = os.path.join(_homedir,
-            bundledir, 'YouCompleteMe/third_party/ycmd/cpp')
-
-    # Possible clang libraries (linux, cygwin, etc..)
-    target_libclangs = glob.glob(os.path.join(ycmd_path, '../libclang.*'))
-
-    if not rebuild_ycmd and len(target_libclangs) > 0:
-        logging.info("Found %s : Skipping ycmd build...", target_libclangs)
-    else:
-        logging.info("Building ycmd...")
-
-        builddir="./ycm_build"
-        rmTree(builddir, dry_run)
-        mkdir(builddir, dry_run)
-        if python_ver == 2:
-            pystr = "-DUSE_PYTHON2=ON"
-        else:
-            pystr = "-DUSE_PYTHON2=OFF"
-        cmd="cd {}; cmake -G 'Unix Makefiles' {} . {}".format(builddir, pystr, ycmd_path)
-        if libclang_path is None:
-            cmd+=" -DUSE_SYSTEM_LIBCLANG=ON"
-        else:
-            cmd+=" -DEXTERNAL_LIBCLANG_PATH=\"{}\"".format(libclang_path)
-        runCmd(cmd, dry_run)
-        cmd = "cd {}; cmake --build . --target ycm_core --config Release".format(builddir)
-        runCmd(cmd, dry_run)
-
-
-
-
 def main():
     parser = argparse.ArgumentParser("Home directory setup script")
     parser.add_argument('-n', '--dry-run', action='store_true', help="Run through script but don't actually run commands")
     parser.add_argument("--no-links", action='store_true', help="Don't create symlinks")
     parser.add_argument("--no-bashrc", action='store_true', help="Don't patch .bashrc")
     parser.add_argument("--no-vim", action='store_true', help="Don't do vim setup")
-    parser.add_argument("--rebuild-ycmd", action='store_true', help='Always rebuild vim ycmd')
     parser.add_argument("--rebuild-links", action='store_true', help='Overwrite links')
-    parser.add_argument("--libclang-path", action='store', default=None, help='Path to custom built libclang.so')
     parser.add_argument("--allow-custom", action='store_true', default=None, help="Don't die if custom configs already exist")
 
     args = parser.parse_args()
@@ -206,8 +174,6 @@ def main():
     do_bashrc = not args.no_bashrc
     do_vim = not args.no_vim
     allow_custom = args.allow_custom
-    rebuild_ycmd = args.rebuild_ycmd
-    libclang_path = args.libclang_path
     rebuild_links = args.rebuild_links
 
     logging.info("Changing directory to script dir...")
@@ -222,7 +188,7 @@ def main():
         patchBashrc(dry_run)
 
     if do_vim:
-        setupVim(rebuild_ycmd, libclang_path, dry_run)
+        setupVim(dry_run)
 
 
 if __name__ == "__main__":
