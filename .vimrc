@@ -2,6 +2,7 @@ set nocompatible
 set bs=2
 
 filetype off
+set visualbell
 
 " Begin vim-plugin Plugins List
 call plug#begin('~/.vim/plugged')
@@ -9,6 +10,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'mechatroner/rainbow_csv'
 Plug 'neoclide/coc.nvim', {'branch' : 'release'}
 call plug#end()
 " End vim-plug Plugins List
