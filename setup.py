@@ -40,8 +40,6 @@ print(os.path.dirname(__file__))
 print(os.path.split(os.path.dirname(__file__))[-1])
 print(_repodir)
 
-_vundle_url="https://github.com/VundleVim/Vundle.vim.git"
-
 def runCmd(cmd, dry_run):
     logging.info("Running cmd: %s ...", cmd)
     if not dry_run:
@@ -146,12 +144,6 @@ def setupVim(dry_run):
     else:
         raise Exception("No python support detected in vim binary!")
 
-
-    # Clone vundle repo
-    vundledir = os.path.join(bundledir, "Vundle.vim")
-    if not os.path.exists(vundledir):
-        logging.info("Bootstrapping vundle...")
-        runCmd("git clone {} {}".format(_vundle_url, vundledir), dry_run)
 
     # Tell vim to install packages
     runCmd("vim +PluginInstall +qall", dry_run)
