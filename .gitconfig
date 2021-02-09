@@ -3,3 +3,5 @@
 	name = Matthew Fioravante
 [color]
 	ui = auto
+[core]
+	editor = vim
