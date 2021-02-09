@@ -30,6 +30,7 @@ Software
 * Steam https://store.steampowered.com/about/
 * Synergy https://symless.com/synergy
 * WinSCP https://winscp.net/eng/download.php
+* Notepad++ https://notepad-plus-plus.org/downloads/
 * x410 Windows Store
 * Intel Vtune https://software.intel.com/content/www/us/en/develop/tools/oneapi/base-toolkit/download.html#operatingsystem=Windows&#distributions=Web%20&%20Local%20(recommended)&#options=Online
 * VPN apps
@@ -49,3 +50,13 @@ Vcpkg install
 ```
 vcpkg install --triplet x64-windows-static --recurse libpng[core] expat[core] pixman[core] freetype[core] harfbuzz[core] libvorbis[core] libsndfile[core] wildmidi[core] libxmp-lite[core] speexdsp[core] mpg123[core] opusfile[core] fluidlite[core] sdl2-image[core] sdl2-mixer[core,nativemidi] icu-easyrpg[core] nlohmann-json[core] fmt[core]
 ```
+
+Using Solarized Theme for Windows cmd.exe
+-----------------------------------------
+
+Use the provided registry file.
+
+```
+regedit /s windows\solarized-dark.reg
+```
+

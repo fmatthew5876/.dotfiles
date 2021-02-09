@@ -16,11 +16,11 @@ Install the following software packages:
 * python3 (libpython3-devel)
 * vim (with python support)
 
-Clone the repo to `~/home`
+Clone the repo to `~/.dotfiles`
 
 ```
 cd ~
-git clone git@github.com:fmatthew5876/home.git
+git clone git@github.com:fmatthew5876/.dotfiles.git
 ```
 
 Add any site specific customizations to `~/.bashrc`
@@ -39,19 +39,27 @@ Installing configs for root
 This must be done manually.
 
 ```
-sudo cp ~/home/root/.bashrc.custom /root
+sudo cp ~/.dotfiles/root/.bashrc.custom /root
 echo "source /root/.bashrc.custom" >> /root/bashrc
 ```
 
+OS Specific Notes
+================
 
-Using Solarized Theme for Windows cmd.exe
------------------------------------------
+Ubuntu
+------
 
-Use the provided registry file.
+Auto install common packages
 
 ```
-regedit /s windows\solarized-dark.reg
+cat pkg.ubuntu | xargs apt install -y
 ```
+
+Windows
+-------
+
+[README.Windows.md](README.windows.md)
+
 
 New System Build Notes
 ======================
